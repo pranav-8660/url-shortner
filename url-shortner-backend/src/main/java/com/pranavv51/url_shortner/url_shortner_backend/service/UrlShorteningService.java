@@ -19,7 +19,7 @@ public class UrlShorteningService {
     @Value("${enabledProtocol}")
     private String protocol;
 
-    private final String baseUrl = protocol+"://"+machineDNS+"/";
+    private final String baseUrl = protocol+"://"+machineDNS+":8555/";
 
     public UrlShorteningService(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
