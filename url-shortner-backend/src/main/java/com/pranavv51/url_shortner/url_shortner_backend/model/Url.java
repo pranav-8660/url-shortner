@@ -32,4 +32,16 @@ public class Url {
         this.isExpired = false;
     }
 
+    public UUID getUrlId(){
+        return this.urlId;
+    }
+
+    public boolean getIsExpired(){
+        return this.isExpired;
+    }
+
+    public StringBuffer getOriginalUrl(){
+        return this.originalUrl;
+    }
+
 }
