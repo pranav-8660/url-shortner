@@ -18,6 +18,9 @@ public class Url {
     private StringBuffer originalUrl;
     private Date createdAt;
     private Date expiryTime;
+
+    // I have planned to set the expiry using a trigger or a cron(say at 6am everyday)..this happens separately outside the application
+    // In a meantime, i can also delete the expired entries (say 2 days after expiry)...this can also be a cron(crontab running a bash script)/trigger
     private boolean isExpired;
 
     private static Date calculateExpiryTime(){
