@@ -11,7 +11,7 @@
 - UI
 - Dockerization
 
-##### Pull the mysql docker image
+##### Pull the mysql docker image, create container with custom configurations, login to the mysql container, create a db
 ```bash
 docker pull mysql:latest
 
