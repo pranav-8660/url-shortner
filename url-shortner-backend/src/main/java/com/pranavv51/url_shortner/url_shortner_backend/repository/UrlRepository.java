@@ -7,7 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UrlRepository extends JpaRepository<Url, UUID> {
-
     public Url findByUrlId(UUID urlId);
-
 }
