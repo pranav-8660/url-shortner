@@ -58,12 +58,13 @@ public class UrlShorteningService {
         //if not in cache, then we need to fall back to the db
         Url url = urlRepository.findByUrlId(urlId);
 
-        //cache it into the db now, as it is accessed
-        saveUrlMappingToRedisForCaching(urlId.toString(),url.getOriginalUrl().toString());
-
         if(url==null || url.getIsExpired()){
             return null;
         }
+
+        //cache it into the db now, as it is accessed
+        saveUrlMappingToRedisForCaching(urlId.toString(),url.getOriginalUrl().toString());
+
         return url.getOriginalUrl();
 
     }
