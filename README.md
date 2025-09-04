@@ -11,7 +11,7 @@
 - UI
 - Dockerization
 
-##### Pull the mysql docker image, create container with custom configurations, login to the mysql container, create a db
+##### Pull the mysql docker image, create container with custom configurations, login to the mysql container, create a db , pull and run redis
 ```bash
 docker pull mysql:latest
 
@@ -20,3 +20,5 @@ docker run -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=some_password --name some_cont
 docker exec -it some_container_name mysql -u root -p
 
 create database db_name;
+
+docker run -d --name redis-container -p 6379:6379 redis:latest
