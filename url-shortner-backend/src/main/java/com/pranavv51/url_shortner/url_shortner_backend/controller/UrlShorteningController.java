@@ -1,5 +1,6 @@
 package com.pranavv51.url_shortner.url_shortner_backend.controller;
 
+import com.pranavv51.url_shortner.url_shortner_backend.DTO.InputLongUrl;
 import com.pranavv51.url_shortner.url_shortner_backend.model.Url;
 import com.pranavv51.url_shortner.url_shortner_backend.service.UrlShorteningService;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +19,14 @@ public class UrlShorteningController {
 
 
     @PostMapping(value="/shorten-url")
-    public String shortenAndStoreUrl(@RequestBody StringBuffer longUrl){
-        return urlShorteningService.shortenUrl(longUrl).toString();
+    public String shortenAndStoreUrl(@RequestBody InputLongUrl inputLongUrl){
+        return urlShorteningService.shortenUrl(inputLongUrl.getInputLongUrl());
     }
 
     @GetMapping(value="/{urlId}")
     public ResponseEntity<Void> redirectToOriginal(@PathVariable("urlId") UUID urlId){
 
-        StringBuffer originalUrl = urlShorteningService.retrieveOrigUrl(urlId);
+        String originalUrl = urlShorteningService.retrieveOrigUrl(urlId);
 
         if(originalUrl==null){
             return ResponseEntity.notFound().build();

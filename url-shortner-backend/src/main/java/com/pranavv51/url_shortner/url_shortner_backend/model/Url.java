@@ -15,7 +15,7 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID urlId;
 
-    private StringBuffer originalUrl;
+    private String originalUrl;
     private Date createdAt;
     private Date expiryTime;
 
@@ -28,7 +28,7 @@ public class Url {
         return Date.from(expiryDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public Url(StringBuffer longUrl){
+    public Url(String longUrl){
         this.originalUrl = longUrl;
         this.createdAt = new Date();
         this.expiryTime = calculateExpiryTime();
@@ -43,7 +43,7 @@ public class Url {
         return this.isExpired;
     }
 
-    public StringBuffer getOriginalUrl(){
+    public String getOriginalUrl(){
         return this.originalUrl;
     }
 

@@ -5,7 +5,6 @@ import com.pranavv51.url_shortner.url_shortner_backend.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +20,9 @@ public class UrlShorteningService {
     @Value("${enabledProtocol}")
     private String protocol;
 
-    private final String baseUrl = protocol+"://"+machineDNS+":8555/";
+    /*private final String baseUrl = protocol+"://"+machineDNS+":8555/";*/
+
+    private final String baseUrl = "http://localhost:8555/";
 
     public UrlShorteningService(UrlRepository urlRepository, RedisTemplate<String, String> redisTemplate) {
         this.urlRepository = urlRepository;
@@ -32,28 +33,28 @@ public class UrlShorteningService {
         redisTemplate.opsForValue().set(urlId,longUrl,2, TimeUnit.DAYS); //TTL is 2 days
     }
 
-    private UUID saveUrlToDB(StringBuffer longUrl){
+    private UUID saveUrlToDB(String longUrl){
         Url savedUrl = urlRepository.save(new Url(longUrl));
-        saveUrlMappingToRedisForCaching(savedUrl.getUrlId().toString(),longUrl.toString());
+        saveUrlMappingToRedisForCaching(savedUrl.getUrlId().toString(),longUrl);
         return savedUrl.getUrlId();
     }
 
-    public StringBuffer shortenUrl(StringBuffer longUrl){
+    public String shortenUrl(String longUrl){
         UUID savedUrl = saveUrlToDB(longUrl);
-        return new StringBuffer().append(baseUrl).append(savedUrl.toString());
+        return baseUrl+savedUrl.toString();
     }
 
     private boolean isUrlExpired(UUID urlId){
         return urlRepository.findByUrlId(urlId).getIsExpired();
     }
 
-    public StringBuffer retrieveOrigUrl(UUID urlId){
+    public String retrieveOrigUrl(UUID urlId){
 
         //first check if the url is cached inside redis...if not retrieve it from the db
         String cachedUrl = redisTemplate.opsForValue().get(urlId.toString());
 
         //if found in the cache, return it...
-        if(cachedUrl!=null) return new StringBuffer().append(cachedUrl);
+        if(cachedUrl!=null) return cachedUrl;
 
         //if not in cache, then we need to fall back to the db
         Url url = urlRepository.findByUrlId(urlId);
@@ -63,7 +64,7 @@ public class UrlShorteningService {
         }
 
         //cache it into the db now, as it is accessed
-        saveUrlMappingToRedisForCaching(urlId.toString(),url.getOriginalUrl().toString());
+        saveUrlMappingToRedisForCaching(urlId.toString(),url.getOriginalUrl());
 
         return url.getOriginalUrl();
 
