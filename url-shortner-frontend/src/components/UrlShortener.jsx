@@ -22,14 +22,14 @@ export default function UrlShortener() {
       const response = await fetch("http://localhost:8080/shorten-url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(longUrl),
+        body: JSON.stringify({ inputLongUrl: longUrl }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to shorten URL");
       }
 
-      const data = await response.text(); // backend returns string
+      const data = await response.text(); // backend returns plain string
       setShortUrl(data);
     } catch (err) {
       setError(err.message);
@@ -68,9 +68,7 @@ export default function UrlShortener() {
 
         {shortUrl && (
           <div className="mt-4 p-3 bg-green-100 rounded-lg">
-            <p className="text-sm font-medium text-green-700">
-              Shortened URL:
-            </p>
+            <p className="text-sm font-medium text-green-700">Shortened URL:</p>
             <a
               href={shortUrl}
               target="_blank"
@@ -85,3 +83,4 @@ export default function UrlShortener() {
     </div>
   );
 }
+
