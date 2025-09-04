@@ -17,12 +17,13 @@ public class UrlShorteningController {
         this.urlShorteningService = urlShorteningService;
     }
 
-
+    @CrossOrigin
     @PostMapping(value="/shorten-url")
     public String shortenAndStoreUrl(@RequestBody InputLongUrl inputLongUrl){
         return urlShorteningService.shortenUrl(inputLongUrl.getInputLongUrl());
     }
 
+    @CrossOrigin
     @GetMapping(value="/{urlId}")
     public ResponseEntity<Void> redirectToOriginal(@PathVariable("urlId") UUID urlId){
 
