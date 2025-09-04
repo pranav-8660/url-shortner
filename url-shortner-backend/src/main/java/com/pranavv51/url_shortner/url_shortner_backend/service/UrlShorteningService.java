@@ -28,12 +28,13 @@ public class UrlShorteningService {
         this.redisTemplate = redisTemplate;
     }
 
-    private void saveUrlMappingToRedis(String urlId,String longUrl){
+    private void saveUrlMappingToRedisForCaching(String urlId,String longUrl){
         redisTemplate.opsForValue().set(urlId,longUrl,2, TimeUnit.DAYS); //TTL is 2 days
     }
 
     private UUID saveUrlToDB(StringBuffer longUrl){
         Url savedUrl = urlRepository.save(new Url(longUrl));
+        saveUrlMappingToRedisForCaching(savedUrl.getUrlId().toString(),longUrl.toString());
         return savedUrl.getUrlId();
     }
 
