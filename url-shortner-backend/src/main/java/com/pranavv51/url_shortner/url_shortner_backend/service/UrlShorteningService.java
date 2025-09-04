@@ -48,7 +48,18 @@ public class UrlShorteningService {
     }
 
     public StringBuffer retrieveOrigUrl(UUID urlId){
+
+        //first check if the url is cached inside redis...if not retrieve it from the db
+        String cachedUrl = redisTemplate.opsForValue().get(urlId.toString());
+
+        //if found in the cache, return it...
+        if(cachedUrl!=null) return new StringBuffer().append(cachedUrl);
+
+        //if not in cache, then we need to fall back to the db
         Url url = urlRepository.findByUrlId(urlId);
+
+        //cache it into the db now, as it is accessed
+        saveUrlMappingToRedisForCaching(urlId.toString(),url.getOriginalUrl().toString());
 
         if(url==null || url.getIsExpired()){
             return null;
